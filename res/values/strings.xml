@@ -60,7 +60,10 @@
     <!-- fps info -->
     <string name="fps_info_title">FPS overlay</string>
     <string name="fps_info_summary">Show overlay with current frames per second</string>
-
+    <!-- Dolby -->
+    <string name="audio_title">Audio</string>
+    <string name="dolby_summary">Open Dolby Atmos app</string>
+    <string name="dolby_title">Dolby App</string>
     <!-- Unsupported -->
     <string name="unsupported">Unsupported</string>
 </resources>

@@ -12,6 +12,20 @@
 -->
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
+        android:key="audio"
+        android:title="@string/audio_title">
+
+        <Preference
+            android:key="audio_dolby_atmos"
+            android:title="@string/dolby_title"
+            android:summary="@string/dolby_summary">
+            <intent
+                android:targetPackage="co.aospa.dolby.xiaomi"
+                android:targetClass="co.aospa.dolby.xiaomi.DolbyActivity" />
+        </Preference>
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:key="charging"
         android:title="@string/smart_charging_main_title">
 
