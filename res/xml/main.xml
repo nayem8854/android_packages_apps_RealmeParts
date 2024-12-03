@@ -17,6 +17,7 @@
 
         <Preference
             android:key="audio_dolby_atmos"
+            android:icon="@drawable/ic_dolby"
             android:title="@string/dolby_title"
             android:summary="@string/dolby_summary">
             <intent
