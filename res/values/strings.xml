@@ -63,7 +63,7 @@
     <!-- Dolby -->
     <string name="audio_title">Audio</string>
     <string name="dolby_summary">Open Dolby Atmos app</string>
-    <string name="dolby_title">Dolby App</string>
+    <string name="dolby_title">Dolby Atmos</string>
     <!-- Unsupported -->
     <string name="unsupported">Unsupported</string>
 </resources>
