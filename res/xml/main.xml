@@ -27,54 +27,8 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:key="charging"
-        android:title="@string/smart_charging_main_title">
-
-        <SwitchPreference
-            android:key="smart_charging"
-            android:icon="@drawable/ic_charging_main"
-            android:summary="@string/smart_charging_summary"
-            android:title="@string/smart_charging_title" />
-
-        <com.realmeparts.SecureSettingListPreference
-            android:key="charging_speed"
-            android:icon="@drawable/ic_charging_speed"
-            android:title="Charging Speed"
-            android:dialogTitle="Select Charging Speed"
-            android:entries="@array/charging_speed_entries"
-            android:entryValues="@array/charging_speed_values"
-            android:defaultValue="0"
-            android:summary="%s" />
-
-        <com.realmeparts.SeekBarPreference
-            android:key="seek_bar"
-            android:title="Select charging limit"
-            android:layout="@layout/preference_slider"
-            android:defaultValue="95"
-            android:max="100"
-            android:min="80"
-            android:layout_gravity="center_vertical"
-            android:layout_width="match_parent"/>
-
-        <SwitchPreference
-            android:key="reset_stats"
-            android:icon="@drawable/ic_info_outline_24dp"
-            android:title="@string/reset_stats_title"
-            android:summary="@string/reset_stats_summary" />
-    </PreferenceCategory>
-
-    <PreferenceCategory
         android:key="graphics"
         android:title="@string/display_title">
-
-        <com.realmeparts.SecureSettingListPreference
-            android:icon="@drawable/ic_cabc"
-            android:key="cabc"
-            android:dialogTitle="@string/cabc_dialogTitle"
-            android:entries="@array/cabc_profiles"
-            android:entryValues="@array/cabc_values"
-            android:defaultValue="0"
-            android:title="@string/cabc_title" />
 
         <SwitchPreference
             android:icon="@drawable/dc_mode_icon"

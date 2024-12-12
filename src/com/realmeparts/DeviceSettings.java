@@ -48,12 +48,9 @@ public class DeviceSettings extends PreferenceFragment
     public static final String KEY_DC_SWITCH = "dc";
     public static final String KEY_OTG_SWITCH = "otg";
     public static final String KEY_GAME_SWITCH = "game";
-    public static final String KEY_CHARGING_SWITCH = "smart_charging";
     public static final String KEY_CHARGING_SPEED = "charging_speed";
     public static final String KEY_RESET_STATS = "reset_stats";
     public static final String KEY_DND_SWITCH = "dnd";
-    public static final String KEY_CABC = "cabc";
-    public static final String CABC_SYSTEM_PROPERTY = "persist.cabc_profile";
     public static final String KEY_FPS_INFO = "fps_info";
     public static final String KEY_SETTINGS_PREFIX = "device_setting_";
     public static final String TP_LIMIT_ENABLE = "/proc/touchpanel/oplus_tp_limit_enable";
@@ -74,13 +71,10 @@ public class DeviceSettings extends PreferenceFragment
     private TwoStatePreference mHBMModeSwitch;
     private TwoStatePreference mOTGModeSwitch;
     private TwoStatePreference mGameModeSwitch;
-    private TwoStatePreference mSmartChargingSwitch;
     private SwitchPreference mFpsInfo;
-    private boolean CABC_DeviceMatched;
     private boolean DC_DeviceMatched;
     private boolean HBM_DeviceMatched;
     private boolean sRGB_DeviceMatched;
-    private SecureSettingListPreference mCABC;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -118,38 +112,10 @@ public class DeviceSettings extends PreferenceFragment
         mDNDSwitch.setChecked(prefs.getBoolean(KEY_DND_SWITCH, false));
         mDNDSwitch.setOnPreferenceChangeListener(this);
 
-        mSmartChargingSwitch = findPreference(KEY_CHARGING_SWITCH);
-        mSmartChargingSwitch.setChecked(prefs.getBoolean(KEY_CHARGING_SWITCH, false));
-        mSmartChargingSwitch.setOnPreferenceChangeListener(new SmartChargingSwitch(getContext()));
-
-        mChargingSpeed = findPreference(KEY_CHARGING_SPEED);
-        mChargingSpeed.setEnabled(mSmartChargingSwitch.isChecked());
-        mChargingSpeed.setOnPreferenceChangeListener(this);
-
-        mResetStats = findPreference(KEY_RESET_STATS);
-        mResetStats.setChecked(prefs.getBoolean(KEY_RESET_STATS, false));
-        mResetStats.setEnabled(mSmartChargingSwitch.isChecked());
-        mResetStats.setOnPreferenceChangeListener(this);
-
-        mSeekBarPreference = findPreference("seek_bar");
-        mSeekBarPreference.setEnabled(mSmartChargingSwitch.isChecked());
-        SeekBarPreference.mProgress = prefs.getInt("seek_bar", 95);
-
         mFpsInfo = findPreference(KEY_FPS_INFO);
         mFpsInfo.setChecked(prefs.getBoolean(KEY_FPS_INFO, false));
         mFpsInfo.setOnPreferenceChangeListener(this);
 
-        mCABC = (SecureSettingListPreference) findPreference(KEY_CABC);
-        mCABC.setValue(Utils.getStringProp(CABC_SYSTEM_PROPERTY, "0"));
-        mCABC.setSummary(mCABC.getEntry());
-        mCABC.setOnPreferenceChangeListener(this);
-
-        isCoolDownAvailable();
-        try {
-            ParseJson();
-        } catch (Exception e) {
-            Log.d("DeviceSettings", e.toString());
-        }
     }
 
     @Override
@@ -172,26 +138,7 @@ public class DeviceSettings extends PreferenceFragment
             mChargingSpeed.setValue((String) newValue);
             mChargingSpeed.setSummary(mChargingSpeed.getEntry());
         }
-
-        if (preference == mCABC) {
-            mCABC.setValue((String) newValue);
-            mCABC.setSummary(mCABC.getEntry());
-            Utils.setStringProp(CABC_SYSTEM_PROPERTY, (String) newValue);
-        }
         return true;
-    }
-
-    // Remove Charging Speed preference if cool_down node is unavailable
-    private void isCoolDownAvailable() {
-        mPreferenceCategory = (PreferenceCategory) findPreference(KEY_CATEGORY_CHARGING);
-
-        if (Utils.fileWritable(SmartChargingService.mmi_charging_enable)) {
-            if (!Utils.fileWritable(SmartChargingService.cool_down)) {
-                mPreferenceCategory.removePreference(findPreference(KEY_CHARGING_SPEED));
-            }
-        } else {
-            getPreferenceScreen().removePreference(mPreferenceCategory);
-        }
     }
 
     private void ParseJson() throws JSONException {
@@ -199,15 +146,6 @@ public class DeviceSettings extends PreferenceFragment
         mPreferenceCategory = (PreferenceCategory) findPreference(KEY_CATEGORY_GRAPHICS);
         String features_json = Utils.InputStreamToString(getResources().openRawResource(R.raw.realmeparts_features));
         JSONObject jsonOB = new JSONObject(features_json);
-
-        JSONArray CABC = jsonOB.getJSONArray(KEY_CABC);
-        for (int i = 0; i < CABC.length(); i++) {
-            if (ProductName.toUpperCase().contains(CABC.getString(i))) {
-                {
-                    CABC_DeviceMatched = true;
-                }
-            }
-        }
 
         JSONArray DC = jsonOB.getJSONArray(KEY_DC_SWITCH);
         for (int i = 0; i < DC.length(); i++) {
@@ -235,12 +173,6 @@ public class DeviceSettings extends PreferenceFragment
                 }
             }
         }
-
-        // Remove CABC preference if device is unsupported
-        if (!CABC_DeviceMatched) {
-            mPreferenceCategory.removePreference(findPreference(KEY_CABC));
-            prefs.edit().putBoolean("CABC_DeviceMatched", false).apply();
-        } else prefs.edit().putBoolean("CABC_DeviceMatched", true).apply();
 
         // Remove DC-Dimming preference if device is unsupported
         if (!DC_DeviceMatched) {

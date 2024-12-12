@@ -20,21 +20,6 @@
     <!-- Ambient settings -->
     <string name="ambient_enable">Nutze Ambient-Display</string>
 
-    <!-- CABC -->
-    <string name="cabc_title">CABC Modus</string>
-    <string name="cabc_dialogTitle">CABC Profile</string>
-    <string name="cabc_off">Aus</string>
-    <string name="cabc_normal">An</string>
-    <string name="cabc_balanced">Ausgewogener Modus</string>
-    <string name="cabc_aggressive">Super-Energiespar-Modus</string>
-    <!-- Charging -->
-    <string name="smart_charging_main_title">Akku</string>
-    <string name="smart_charging_title">Smart Charging</string>
-    <string name="smart_charging_summary">Hilft bei der Abkühlung &amp; schützt auch vor Überladung des Gerätes.</string>
-    <string name="reset_stats_title">Akkustatistik zurücksetzen</string>
-    <string name="reset_stats_summary">Die Akkustatistiken werden zurückgesetzt, wenn die Ladegrenze erreicht ist.</string>
-    <string name="smart_charging_status_notif">Smart Charging läuft.</string>
-    <string name="smart_charging_stoppped_notif">Die Ladegrenze ist erreicht, der Ladevorgang wurde gestoppt.</string>
     <!-- DC dimming -->
     <string name="dc_mode_summary">DC-Dimming reduziert die Belastung der Augen bei schlechten Lichtverhältnissen, kann aber zu einer geringeren Bildqualität und schlechteren Farbwiedergabe führen.</string>
     <string name="dc_mode_title">DC-Dimming</string>

@@ -80,12 +80,6 @@ public class Startup extends BroadcastReceiver {
             Utils.startService(context, HBMService.class);
         }
 
-        enabled = sharedPrefs.getBoolean(DeviceSettings.KEY_CHARGING_SWITCH, false);
-        restore(SmartChargingSwitch.getFile(), enabled);
-        if (enabled) {
-            Utils.startService(context, SmartChargingService.class);
-        }
-
         enabled = sharedPrefs.getBoolean(DeviceSettings.KEY_FPS_INFO, false);
         if (enabled) {
             Utils.startService(context, FPSInfoService.class);
