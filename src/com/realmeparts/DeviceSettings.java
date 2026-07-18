@@ -66,7 +66,6 @@ public class DeviceSettings extends PreferenceFragment
     public static SeekBarPreference mSeekBarPreference;
     public static DisplayManager mDisplayManager;
     private static NotificationManager mNotificationManager;
-    private static TwoStatePreference mEnableDolbyAtmos;
     public TwoStatePreference mDNDSwitch;
     public PreferenceCategory mPreferenceCategory;
     private TwoStatePreference mDCModeSwitch;
