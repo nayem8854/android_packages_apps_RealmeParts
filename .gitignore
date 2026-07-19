@@ -1,4 +1,3 @@
-
 *.iml
 .idea
 gen/
@@ -6,3 +5,10 @@ gen/
 /src/libs/
 .gradle/
 local.properties
+# Standalone Gradle build is not used; Soong Android.bp is the only build path
+build.gradle
+settings.gradle
+gradle.properties
+gradlew
+gradlew.bat
+gradle/
