@@ -160,6 +160,7 @@
                 android:exported="false">
         </service>
         <service android:name="com.realmeparts.SmartChargingService"
+                android:enabled="false"
                 android:exported="false">
         </service>
         <service android:name="com.realmeparts.HBMService"

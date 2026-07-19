@@ -48,6 +48,7 @@ public class DeviceSettings extends PreferenceFragment
     public static final String KEY_DC_SWITCH = "dc";
     public static final String KEY_OTG_SWITCH = "otg";
     public static final String KEY_GAME_SWITCH = "game";
+    /** @deprecated Smart charging UI removed; Lineage Health owns charge limit. */
     public static final String KEY_CHARGING_SWITCH = "smart_charging";
     public static final String KEY_CHARGING_SPEED = "charging_speed";
     public static final String KEY_RESET_STATS = "reset_stats";
@@ -59,11 +60,7 @@ public class DeviceSettings extends PreferenceFragment
     public static final String TP_LIMIT_ENABLE = "/proc/touchpanel/oplus_tp_limit_enable";
     public static final String TP_DIRECTION = "/proc/touchpanel/oplus_tp_direction";
     private static final String ProductName = Utils.ProductName();
-    private static final String KEY_CATEGORY_CHARGING = "charging";
     private static final String KEY_CATEGORY_GRAPHICS = "graphics";
-    public static SecureSettingListPreference mChargingSpeed;
-    public static TwoStatePreference mResetStats;
-    public static SeekBarPreference mSeekBarPreference;
     public static DisplayManager mDisplayManager;
     private static NotificationManager mNotificationManager;
     public TwoStatePreference mDNDSwitch;
@@ -73,7 +70,6 @@ public class DeviceSettings extends PreferenceFragment
     private TwoStatePreference mHBMModeSwitch;
     private TwoStatePreference mOTGModeSwitch;
     private TwoStatePreference mGameModeSwitch;
-    private TwoStatePreference mSmartChargingSwitch;
     private SwitchPreference mFpsInfo;
     private boolean CABC_DeviceMatched;
     private boolean DC_DeviceMatched;
@@ -117,22 +113,8 @@ public class DeviceSettings extends PreferenceFragment
         mDNDSwitch.setChecked(prefs.getBoolean(KEY_DND_SWITCH, false));
         mDNDSwitch.setOnPreferenceChangeListener(this);
 
-        mSmartChargingSwitch = findPreference(KEY_CHARGING_SWITCH);
-        mSmartChargingSwitch.setChecked(prefs.getBoolean(KEY_CHARGING_SWITCH, false));
-        mSmartChargingSwitch.setOnPreferenceChangeListener(new SmartChargingSwitch(getContext()));
-
-        mChargingSpeed = findPreference(KEY_CHARGING_SPEED);
-        mChargingSpeed.setEnabled(mSmartChargingSwitch.isChecked());
-        mChargingSpeed.setOnPreferenceChangeListener(this);
-
-        mResetStats = findPreference(KEY_RESET_STATS);
-        mResetStats.setChecked(prefs.getBoolean(KEY_RESET_STATS, false));
-        mResetStats.setEnabled(mSmartChargingSwitch.isChecked());
-        mResetStats.setOnPreferenceChangeListener(this);
-
-        mSeekBarPreference = findPreference("seek_bar");
-        mSeekBarPreference.setEnabled(mSmartChargingSwitch.isChecked());
-        SeekBarPreference.mProgress = prefs.getInt("seek_bar", 95);
+        // Clear legacy smart-charge preference; Lineage Health owns charge limit.
+        prefs.edit().putBoolean(KEY_CHARGING_SWITCH, false).apply();
 
         mFpsInfo = findPreference(KEY_FPS_INFO);
         mFpsInfo.setChecked(prefs.getBoolean(KEY_FPS_INFO, false));
@@ -143,7 +125,6 @@ public class DeviceSettings extends PreferenceFragment
         mCABC.setSummary(mCABC.getEntry());
         mCABC.setOnPreferenceChangeListener(this);
 
-        isCoolDownAvailable();
         try {
             ParseJson();
         } catch (Exception e) {
@@ -167,30 +148,12 @@ public class DeviceSettings extends PreferenceFragment
             }
         }
 
-        if (preference == mChargingSpeed) {
-            mChargingSpeed.setValue((String) newValue);
-            mChargingSpeed.setSummary(mChargingSpeed.getEntry());
-        }
-
         if (preference == mCABC) {
             mCABC.setValue((String) newValue);
             mCABC.setSummary(mCABC.getEntry());
             Utils.setStringProp(CABC_SYSTEM_PROPERTY, (String) newValue);
         }
         return true;
-    }
-
-    // Remove Charging Speed preference if cool_down node is unavailable
-    private void isCoolDownAvailable() {
-        mPreferenceCategory = (PreferenceCategory) findPreference(KEY_CATEGORY_CHARGING);
-
-        if (Utils.fileWritable(SmartChargingService.mmi_charging_enable)) {
-            if (!Utils.fileWritable(SmartChargingService.cool_down)) {
-                mPreferenceCategory.removePreference(findPreference(KEY_CHARGING_SPEED));
-            }
-        } else {
-            getPreferenceScreen().removePreference(mPreferenceCategory);
-        }
     }
 
     private void ParseJson() throws JSONException {

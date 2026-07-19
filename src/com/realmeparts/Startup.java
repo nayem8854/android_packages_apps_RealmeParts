@@ -31,7 +31,6 @@ import com.realmeparts.doze.DozeUtils;
 public class Startup extends BroadcastReceiver {
 
     private static final String TAG = "BootReceiver";
-    private static final String ONE_TIME_TUNABLE_RESTORE = "hardware_tunable_restored";
 
     private void restore(String file, boolean enabled) {
         if (file == null) {
@@ -42,13 +41,6 @@ public class Startup extends BroadcastReceiver {
         }
     }
 
-    private void restore(String file, String value) {
-        if (file == null) {
-            return;
-        }
-        Utils.writeValue(file, value);
-    }
-
     @Override
     public void onReceive(final Context context, final Intent bootintent) {
         // Doze gestures: OplusDoze only — do not start RealmeParts DozeService.
@@ -57,8 +49,13 @@ public class Startup extends BroadcastReceiver {
             Intent serviceIntent = new Intent(context, AodLightService.class);
             ContextCompat.startForegroundService(context, serviceIntent);
         }
-        boolean enabled = false;
+
+        boolean enabled;
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        // Lineage Health owns mmi_charging_enable — stop any legacy smart charge.
+        Utils.stopService(context, SmartChargingService.class);
+        sharedPrefs.edit().putBoolean(DeviceSettings.KEY_CHARGING_SWITCH, false).apply();
 
         enabled = sharedPrefs.getBoolean(DeviceSettings.KEY_DC_SWITCH, false);
         restore(DCModeSwitch.getFile(), enabled);
@@ -81,25 +78,9 @@ public class Startup extends BroadcastReceiver {
             Utils.startService(context, HBMService.class);
         }
 
-        enabled = sharedPrefs.getBoolean(DeviceSettings.KEY_CHARGING_SWITCH, false);
-        restore(SmartChargingSwitch.getFile(), enabled);
-        if (enabled) {
-            Utils.startService(context, SmartChargingService.class);
-        }
-
         enabled = sharedPrefs.getBoolean(DeviceSettings.KEY_FPS_INFO, false);
         if (enabled) {
             Utils.startService(context, FPSInfoService.class);
         }
-    }
-
-    private boolean hasRestoredTunable(Context context) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getBoolean(ONE_TIME_TUNABLE_RESTORE, false);
-    }
-
-    private void setRestoredTunable(Context context) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        preferences.edit().putBoolean(ONE_TIME_TUNABLE_RESTORE, true).apply();
     }
 }
