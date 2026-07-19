@@ -17,9 +17,11 @@
  */
 package com.realmeparts;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.BatteryManager;
 import android.os.Build;
@@ -28,6 +30,9 @@ import android.os.Looper;
 import android.os.SystemProperties;
 import android.os.UserHandle;
 import android.util.Log;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -66,9 +71,9 @@ public class Utils {
             fos.flush();
             fos.close();
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            Log.e(TAG, "writeValue: file not found: " + filename, e);
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(TAG, "writeValue: failed for " + filename, e);
         }
     }
 
@@ -100,7 +105,7 @@ public class Utils {
                 fos.flush();
                 fos.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e(TAG, "sysfs write failed", e);
             }
         }
     }
@@ -116,7 +121,7 @@ public class Utils {
                 fos.flush();
                 fos.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e(TAG, "sysfs write failed", e);
             }
         }
     }
@@ -132,7 +137,7 @@ public class Utils {
                 fos.flush();
                 fos.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e(TAG, "sysfs write failed", e);
             }
         }
     }
@@ -148,7 +153,7 @@ public class Utils {
                 fos.flush();
                 fos.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e(TAG, "sysfs write failed", e);
             }
         }
     }
@@ -217,6 +222,45 @@ public class Utils {
 
     public static String ProductName() {
         return Build.PRODUCT;
+    }
+
+    /**
+     * Enable or disable a TileService / component without killing the process.
+     */
+    public static void setComponentEnabled(Context context, Class<?> cls, boolean enabled) {
+        if (context == null || cls == null) {
+            return;
+        }
+        PackageManager pm = context.getPackageManager();
+        ComponentName cn = new ComponentName(context, cls);
+        int state = enabled
+                ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+                : PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
+        pm.setComponentEnabledSetting(cn, state, PackageManager.DONT_KILL_APP);
+    }
+
+    /**
+     * Whether {@code Build.PRODUCT} matches any entry in features JSON array {@code featureKey}.
+     */
+    public static boolean isFeatureMatched(Context context, String featureKey) {
+        if (context == null || featureKey == null) {
+            return false;
+        }
+        try {
+            String json = InputStreamToString(
+                    context.getResources().openRawResource(R.raw.realmeparts_features));
+            JSONObject root = new JSONObject(json);
+            JSONArray arr = root.getJSONArray(featureKey);
+            String product = ProductName().toUpperCase();
+            for (int i = 0; i < arr.length(); i++) {
+                if (product.contains(arr.getString(i).toUpperCase())) {
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "isFeatureMatched failed for " + featureKey, e);
+        }
+        return false;
     }
 
     public static String InputStreamToString(InputStream inputStream) {
