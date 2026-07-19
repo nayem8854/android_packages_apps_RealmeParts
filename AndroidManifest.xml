@@ -38,18 +38,13 @@
         android:allowBackup="true"
         android:fullBackupContent="true">
 
-        <!-- Doze -->
+        <!-- Doze disabled: OplusDoze owns ambient gestures. -->
         <activity
             android:name=".doze.DozeSettingsActivity"
             android:label="@string/ambient_display_gestures_title"
             android:theme="@style/Theme.SubSettingsBase"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.android.settings.action.IA_SETTINGS" />
-            </intent-filter>
-            <meta-data android:name="com.android.settings.category"
-                       android:value="com.android.settings.category.ia.display" />
-        </activity>
+            android:enabled="false"
+            android:exported="false" />
 
         <!-- Device Settings -->
         <activity
@@ -171,6 +166,7 @@
                 android:exported="false">
         </service>
         <service android:name="com.realmeparts.doze.DozeService"
+                android:enabled="false"
                 android:exported="false">
         </service>
     </application>

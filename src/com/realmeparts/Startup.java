@@ -51,10 +51,11 @@ public class Startup extends BroadcastReceiver {
 
     @Override
     public void onReceive(final Context context, final Intent bootintent) {
-        DozeUtils.checkDozeService(context);
+        // Doze gestures: OplusDoze only — do not start RealmeParts DozeService.
+        // AOD panel light mode still uses AodLightService when system AOD is on.
         if (DozeUtils.isAlwaysOnEnabled(context)) {
-          Intent serviceIntent = new Intent(context, AodLightService.class);
-          ContextCompat.startForegroundService(context, serviceIntent);
+            Intent serviceIntent = new Intent(context, AodLightService.class);
+            ContextCompat.startForegroundService(context, serviceIntent);
         }
         boolean enabled = false;
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
