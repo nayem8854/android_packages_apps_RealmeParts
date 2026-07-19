@@ -60,14 +60,16 @@ public class AodLightService extends Service {
         createNotificationChannel();
         Notification notification = new Notification.Builder(this, CHANNEL_ID)
                 .setContentTitle("AOD Light Service")
-                .setContentText("AOD Light Service is running")
+                .setContentText("AOD panel light mode helper")
                 .setSmallIcon(R.drawable.ic_service_icon)
+                .setOngoing(true)
                 .build();
 
         startForeground(1, notification);
 
+        // 500ms wakes the CPU too often and fights deep idle; 2s is enough for AOD light mode.
         scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.scheduleAtFixedRate(this::checkAndSetLightMode, 0, 500, TimeUnit.MILLISECONDS);
+        scheduler.scheduleAtFixedRate(this::checkAndSetLightMode, 0, 2, TimeUnit.SECONDS);
     }
 
     @Override
@@ -119,7 +121,7 @@ public class AodLightService extends Service {
             NotificationChannel serviceChannel = new NotificationChannel(
                     CHANNEL_ID,
                     "AOD Light Service Channel",
-                    NotificationManager.IMPORTANCE_DEFAULT
+                    NotificationManager.IMPORTANCE_MIN
             );
             NotificationManager manager = getSystemService(NotificationManager.class);
             manager.createNotificationChannel(serviceChannel);
