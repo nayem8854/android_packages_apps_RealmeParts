@@ -53,10 +53,6 @@ public class Startup extends BroadcastReceiver {
         boolean enabled;
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 
-        // Lineage Health owns mmi_charging_enable — stop any legacy smart charge.
-        Utils.stopService(context, SmartChargingService.class);
-        sharedPrefs.edit().putBoolean(DeviceSettings.KEY_CHARGING_SWITCH, false).apply();
-
         // CABC QS tile only on devices listed in realmeparts_features.json
         boolean cabc = Utils.isFeatureMatched(context, DeviceSettings.KEY_CABC);
         sharedPrefs.edit().putBoolean("CABC_DeviceMatched", cabc).apply();

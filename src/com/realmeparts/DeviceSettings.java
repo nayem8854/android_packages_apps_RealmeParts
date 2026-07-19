@@ -48,10 +48,6 @@ public class DeviceSettings extends PreferenceFragment
     public static final String KEY_DC_SWITCH = "dc";
     public static final String KEY_OTG_SWITCH = "otg";
     public static final String KEY_GAME_SWITCH = "game";
-    /** @deprecated Smart charging UI removed; Lineage Health owns charge limit. */
-    public static final String KEY_CHARGING_SWITCH = "smart_charging";
-    public static final String KEY_CHARGING_SPEED = "charging_speed";
-    public static final String KEY_RESET_STATS = "reset_stats";
     public static final String KEY_DND_SWITCH = "dnd";
     public static final String KEY_CABC = "cabc";
     public static final String CABC_SYSTEM_PROPERTY = "persist.cabc_profile";
@@ -112,9 +108,6 @@ public class DeviceSettings extends PreferenceFragment
         mDNDSwitch = findPreference(KEY_DND_SWITCH);
         mDNDSwitch.setChecked(prefs.getBoolean(KEY_DND_SWITCH, false));
         mDNDSwitch.setOnPreferenceChangeListener(this);
-
-        // Clear legacy smart-charge preference; Lineage Health owns charge limit.
-        prefs.edit().putBoolean(KEY_CHARGING_SWITCH, false).apply();
 
         mFpsInfo = findPreference(KEY_FPS_INFO);
         mFpsInfo.setChecked(prefs.getBoolean(KEY_FPS_INFO, false));

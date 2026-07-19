@@ -159,10 +159,6 @@
         <service android:name="com.realmeparts.GameModeRotationService"
                 android:exported="false">
         </service>
-        <service android:name="com.realmeparts.SmartChargingService"
-                android:enabled="false"
-                android:exported="false">
-        </service>
         <service android:name="com.realmeparts.HBMService"
                 android:exported="false">
         </service>

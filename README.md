@@ -34,14 +34,8 @@ Here is a complete detailed list of the features with their caveats and support 
 
 >TODO: Add Per-App refresh rate setting
 
-- **Smart Charging**:
-  - Cool down based on battery temperature during charging,
-  - Max charging limit control,
-  - Battery stats reset toggle,
-  - Charging speed control.
-> Available Charging Speeds: 1.8A | 15W, and default speed
-
 - **sRGB Mode**:  SRGB mode provides accurate SRGB colors without any additional messing with color settings by users.
+
 
 ## Building RealmeParts
 RealmeParts is supposed to be built using AOSP's build (make) system. To build it, clone this repository into the `packages/apps/RealmeParts` directory of your OS's source code and include the following lines in your device's makefile:
