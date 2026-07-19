@@ -57,6 +57,11 @@ public class Startup extends BroadcastReceiver {
         Utils.stopService(context, SmartChargingService.class);
         sharedPrefs.edit().putBoolean(DeviceSettings.KEY_CHARGING_SWITCH, false).apply();
 
+        // CABC QS tile only on devices listed in realmeparts_features.json
+        boolean cabc = Utils.isFeatureMatched(context, DeviceSettings.KEY_CABC);
+        sharedPrefs.edit().putBoolean("CABC_DeviceMatched", cabc).apply();
+        Utils.setComponentEnabled(context, CABCTileService.class, cabc);
+
         enabled = sharedPrefs.getBoolean(DeviceSettings.KEY_DC_SWITCH, false);
         restore(DCModeSwitch.getFile(), enabled);
 

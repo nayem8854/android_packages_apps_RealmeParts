@@ -198,11 +198,14 @@ public class DeviceSettings extends PreferenceFragment
             }
         }
 
-        // Remove CABC preference if device is unsupported
+        // Remove CABC preference if device is unsupported; hide QS tile too
         if (!CABC_DeviceMatched) {
             mPreferenceCategory.removePreference(findPreference(KEY_CABC));
             prefs.edit().putBoolean("CABC_DeviceMatched", false).apply();
-        } else prefs.edit().putBoolean("CABC_DeviceMatched", true).apply();
+        } else {
+            prefs.edit().putBoolean("CABC_DeviceMatched", true).apply();
+        }
+        Utils.setComponentEnabled(getContext(), CABCTileService.class, CABC_DeviceMatched);
 
         // Remove DC-Dimming preference if device is unsupported
         if (!DC_DeviceMatched) {

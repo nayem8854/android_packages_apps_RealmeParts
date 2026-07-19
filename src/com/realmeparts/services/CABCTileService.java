@@ -47,6 +47,11 @@ public class CABCTileService extends TileService {
 
     @Override
     public void onClick() {
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (!sharedPrefs.getBoolean("CABC_DeviceMatched", false)) {
+            return;
+        }
+
         int currentState = Utils.getintProp(DeviceSettings.CABC_SYSTEM_PROPERTY, 0);
 
         int nextState;
